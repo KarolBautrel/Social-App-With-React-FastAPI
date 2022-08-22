@@ -15,6 +15,10 @@ def create_user(request: schemas.CreateUser, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Passwords doesnt match"
         )
+    if db.query(models.User).filter(models.User.email == request.email).first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User already exists"
+        )
     new_user = models.User(
         username=request.username,
         email=request.email,

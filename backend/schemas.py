@@ -8,7 +8,7 @@ class User(BaseModel):
     id: str
 
 
-class CreateThread(BaseModel):
+class CreatePost(BaseModel):
     title: str
     body: str
 
@@ -30,9 +30,10 @@ class CreateUser(BaseModel):
     confirm_password: str
 
 
-class DisplayThread(BaseModel):
+class DisplayPost(BaseModel):
     title: str
     body: str
+    id: int
     creator: DisplayUserAsCreator
 
     class Config:
@@ -42,7 +43,7 @@ class DisplayThread(BaseModel):
 class DisplayUser(BaseModel):
     username: str
     email: str
-    threads: List[DisplayThread]
+    posts: List[DisplayPost]
     id: int
 
     class Config:
