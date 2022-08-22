@@ -55,10 +55,7 @@ def delete_post(
     current_user: schemas.User = Depends(auth_token.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == post_id).first()
-    print(post)
-    request_user = (
-        db.query(models.User).filter(models.User.email == current_user.email).first()
-    )
+
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="There is no post like this"
