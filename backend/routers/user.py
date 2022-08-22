@@ -3,6 +3,7 @@ import models, schemas, database, auth_token
 from sqlalchemy.orm import Session
 from typing import List
 from hashing import Hash
+from fastapi.responses import JSONResponse
 
 router = APIRouter(prefix="/user", tags=["users"])
 
