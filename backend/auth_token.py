@@ -16,10 +16,10 @@ load_dotenv(env_path)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+##Logging in##
+def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
 
-def create_access_token(token: dict, expires_delta: Union[timedelta, None] = None):
-
-    to_encode = token.copy()
+    to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
@@ -31,28 +31,22 @@ def create_access_token(token: dict, expires_delta: Union[timedelta, None] = Non
     return encoded_jwt
 
 
-def verify_token(token: str, credentials_exception):
-    print(token)
+##Checking permissions##
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
-
         payload = jwt.decode(
             token=token, key=os.getenv("SECRET_KEY"), algorithms=os.getenv("ALGORITHM")
         )
-        email: str = payload.get("sub")
-
+        email: str = payload.get("user_email")
+        print(payload)
         if email is None:
             raise credentials_exception
         token_data = schemas.TokenData(email=email)
         return token_data
     except:
         raise credentials_exception
-
-
-def get_current_user(token: str = Depends(oauth2_scheme)):
-
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    return verify_token(token, credentials_exception)

@@ -5,10 +5,6 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
 
 router = APIRouter(prefix="/login", tags=["auth_token"])
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 get_db = database.get_db
 
 
@@ -28,8 +24,14 @@ async def token(
         )
     access_token_expires = timedelta(minutes=30)
     access_token = auth_token.create_access_token(
-        token={"sub": user.email}, expires_delta=access_token_expires
+        data={
+            "user_email": user.email,
+            "user_id": user.id,
+            "user_username": user.username,
+        },
+        expires_delta=access_token_expires,
     )
+    print(access_token)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
