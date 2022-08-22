@@ -1,0 +1,38 @@
+from fastapi import APIRouter, Depends, status, Response, HTTPException
+import models, schemas, database, auth_token
+from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from datetime import timedelta
+
+router = APIRouter(prefix="/login", tags=["auth_token"])
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+get_db = database.get_db
+
+
+@router.post("/")
+async def token(
+    request: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(database.get_db),
+):
+    user = db.query(models.User).filter(models.User.email == request.username).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="invalid credentials"
+        )
+    if not user.verify_password(request.password):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="invalid password"
+        )
+    access_token_expires = timedelta(minutes=30)
+    access_token = auth_token.create_access_token(
+        token={"sub": user.email}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/logout")
+async def index():
+    pass
