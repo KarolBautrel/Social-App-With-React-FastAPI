@@ -2,13 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 
 
-class User(BaseModel):
-    username: str
-    email: str
-    id: str
-
-
-class CreatePost(BaseModel):
+class CreateUpdatePost(BaseModel):
     title: str
     body: str
 
@@ -16,11 +10,28 @@ class CreatePost(BaseModel):
         orm_mode: True
 
 
-class DisplayUserAsCreator(BaseModel):
+class UserInfo(BaseModel):
     username: str
+    email: str
+    id: int
 
     class Config:
         orm_mode = True
+
+
+class PostInfo(BaseModel):
+    title: str
+    body: str
+
+    class Config:
+        orm_mode: True
+
+
+class Comment(BaseModel):
+    id: int
+    body: str
+    comment_creator: UserInfo
+    commented_post: PostInfo
 
 
 class CreateUser(BaseModel):
@@ -30,11 +41,37 @@ class CreateUser(BaseModel):
     confirm_password: str
 
 
+class RequestUser(BaseModel):
+    username: str
+    email: str
+    id: str
+
+    class Config:
+        orm_mode: True
+
+
 class DisplayPost(BaseModel):
     title: str
     body: str
     id: int
-    creator: DisplayUserAsCreator
+    creator: UserInfo
+    participants: List[UserInfo]
+
+    class Config:
+        orm_mode = True
+
+
+class ListPost(BaseModel):
+    title: str
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ListParticipiedPost(BaseModel):
+    title: str
+    id: int
 
     class Config:
         orm_mode = True
@@ -43,7 +80,8 @@ class DisplayPost(BaseModel):
 class DisplayUser(BaseModel):
     username: str
     email: str
-    posts: List[DisplayPost]
+    posts: List[ListPost]
+    participant: List[ListParticipiedPost]
     id: int
 
     class Config:
@@ -57,3 +95,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class CommentCreation(BaseModel):
+    body: str

@@ -34,7 +34,7 @@ def create_user(request: schemas.CreateUser, db: Session = Depends(get_db)):
 @router.get("/me", response_model=schemas.DisplayUser)
 def create_user(
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(auth_token.get_current_user),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()

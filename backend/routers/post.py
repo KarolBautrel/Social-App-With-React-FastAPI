@@ -13,28 +13,29 @@ get_db = database.get_db
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_post(
-    request: schemas.CreatePost,
+    request: schemas.CreateUpdatePost,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(auth_token.get_current_user),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
     print(request_user)
-    new_thread = models.Post(
-        title=request.title, body=request.body, creator=request_user
-    )
-
-    db.add(new_thread)
+    new_post = models.Post(title=request.title, body=request.body, creator=request_user)
+    new_post.participants.append(request_user)
+    db.add(new_post)
     db.commit()
-    db.refresh(new_thread)
-    return new_thread
+    db.refresh(new_post)
+    return new_post
 
 
 @router.get("/", response_model=List[schemas.DisplayPost])
 def list_all_posts(db: Session = Depends(get_db)):
-    threads = db.query(models.Post).all()
-    return threads
+    posts = db.query(models.Post).all()
+    for i in posts:
+        for participant in i.participants:
+            print(participant.id)
+    return posts
 
 
 @router.get("/{post_id}", response_model=schemas.DisplayPost)
@@ -45,14 +46,42 @@ def retrieve_post(post_id, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="There is no post like this"
         )
+    for i in post.comments:
+        print(i.body)
     return post
+
+
+@router.put("/{post_id}")
+def put_post(
+    post_id,
+    request: schemas.CreateUpdatePost,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    post = db.query(models.Post).filter(models.Post.id == post_id)
+    if not post.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="There is no post like this"
+        )
+    if not (
+        post.first().creator
+        == db.query(models.User).filter(models.User.email == current_user.email).first()
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Only cretor of blog can update it",
+        )
+    print(request)
+    post.update(request.dict())
+    db.commit()
+    return Response(status_code=status.HTTP_200_OK, content="Post Updated successfully")
 
 
 @router.delete("/{post_id}")
 def delete_post(
     post_id,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(auth_token.get_current_user),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == post_id).first()
 
