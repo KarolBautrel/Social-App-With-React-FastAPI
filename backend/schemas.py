@@ -7,7 +7,7 @@ class CreateUpdatePost(BaseModel):
     body: str
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 
 class UserInfo(BaseModel):
@@ -24,7 +24,7 @@ class PostInfo(BaseModel):
     body: str
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 
 class Comment(BaseModel):
@@ -32,6 +32,9 @@ class Comment(BaseModel):
     body: str
     comment_creator: UserInfo
     commented_post: PostInfo
+
+    class Config:
+        orm_mode = True
 
 
 class CreateUser(BaseModel):
@@ -47,7 +50,7 @@ class RequestUser(BaseModel):
     id: str
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 
 class DisplayPost(BaseModel):
@@ -56,6 +59,7 @@ class DisplayPost(BaseModel):
     id: int
     creator: UserInfo
     participants: List[UserInfo]
+    comments: List[Comment]
 
     class Config:
         orm_mode = True
