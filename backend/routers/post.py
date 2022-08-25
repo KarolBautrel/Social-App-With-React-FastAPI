@@ -108,7 +108,7 @@ def delete_post(
     return Response(status_code=status.HTTP_200_OK, content="Post deleted successfully")
 
 
-@router.put("/follow/{post_id}", response_model=schemas.DisplayPost)
+@router.patch("/follow/{post_id}", response_model=schemas.DisplayPost)
 def follow_post(
     post_id,
     db: Session = Depends(get_db),
@@ -138,7 +138,7 @@ def follow_post(
     return post
 
 
-@router.put("/unfollow/{post_id}", response_model=schemas.DisplayPost)
+@router.patch("/unfollow/{post_id}", response_model=schemas.DisplayPost)
 def unfollow_post(
     post_id,
     db: Session = Depends(get_db),
@@ -148,7 +148,6 @@ def unfollow_post(
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
     post = db.query(models.Post).filter(models.Post.id == post_id)
-    print(post)
     if not post.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post doesnt exist"
