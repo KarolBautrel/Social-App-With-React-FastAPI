@@ -9,7 +9,7 @@ get_db = database.get_db
 
 
 @router.post("/")
-async def token(
+async def get_jwt_token(
     request: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):

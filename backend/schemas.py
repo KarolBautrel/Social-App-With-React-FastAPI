@@ -10,6 +10,13 @@ class CreateUpdatePost(BaseModel):
         orm_mode = True
 
 
+class UpdateComment(BaseModel):
+    body: str
+
+    class Config:
+        orm_mode = True
+
+
 class UserInfo(BaseModel):
     username: str
     email: str
@@ -60,6 +67,7 @@ class DisplayPost(BaseModel):
     creator: UserInfo
     participants: List[UserInfo]
     comments: List[Comment]
+    followers: List[UserInfo]
 
     class Config:
         orm_mode = True
@@ -73,7 +81,7 @@ class ListPost(BaseModel):
         orm_mode = True
 
 
-class ListParticipiedPost(BaseModel):
+class ListParticipiedFollowingPost(BaseModel):
     title: str
     id: int
 
@@ -85,7 +93,8 @@ class DisplayUser(BaseModel):
     username: str
     email: str
     posts: List[ListPost]
-    participant: List[ListParticipiedPost]
+    participant: List[ListParticipiedFollowingPost]
+    follower: List[ListParticipiedFollowingPost]
     id: int
 
     class Config:

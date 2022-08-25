@@ -32,7 +32,7 @@ def create_user(request: schemas.CreateUser, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=schemas.DisplayUser)
-def create_user(
+def get_request_user(
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
@@ -44,3 +44,15 @@ def create_user(
             {"Error": "You are not logged in"}, status_code=status.HTTP_404_NOT_FOUND
         )
     return request_user
+
+
+@router.get("/{user_id}", response_model=schemas.DisplayUser)
+def get_user(user_id, db: Session = Depends(get_db)):
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    print(user)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist"
+        )
+    return user

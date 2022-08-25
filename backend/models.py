@@ -10,6 +10,13 @@ participants_table = Table(
     Column("posts_id", ForeignKey("posts.id"), primary_key=True),
 )
 
+followers_table = Table(
+    "followers_table",
+    Base.metadata,
+    Column("users_id", ForeignKey("users.id"), primary_key=True),
+    Column("posts_id", ForeignKey("posts.id"), primary_key=True),
+)
+
 
 class Post(Base):
     __tablename__ = "posts"
@@ -27,6 +34,7 @@ class Post(Base):
         "User", secondary=participants_table, backref="participant"
     )
     comments = relationship("Comment", back_populates="commented_post")
+    followers = relationship("User", secondary=followers_table, backref="follower")
 
     def __str__(self):
         return self.title

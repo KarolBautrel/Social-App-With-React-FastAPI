@@ -11,7 +11,9 @@ router = APIRouter(
 get_db = database.get_db
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", status_code=status.HTTP_201_CREATED, response_model=schemas.DisplayPost
+)
 def create_post(
     request: schemas.CreateUpdatePost,
     db: Session = Depends(get_db),
@@ -23,6 +25,7 @@ def create_post(
     print(request_user)
     new_post = models.Post(title=request.title, body=request.body, creator=request_user)
     new_post.participants.append(request_user)
+    new_post.followers.append(request_user)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -51,7 +54,7 @@ def retrieve_post(post_id, db: Session = Depends(get_db)):
     return post
 
 
-@router.put("/{post_id}")
+@router.put("/{post_id}", response_model=schemas.DisplayPost)
 def put_post(
     post_id,
     request: schemas.CreateUpdatePost,
@@ -74,7 +77,7 @@ def put_post(
     print(request)
     post.update(request.dict())
     db.commit()
-    return Response(status_code=status.HTTP_200_OK, content="Post Updated successfully")
+    return post.first()
 
 
 @router.delete("/{post_id}")
@@ -103,3 +106,64 @@ def delete_post(
     db.commit()
 
     return Response(status_code=status.HTTP_200_OK, content="Post deleted successfully")
+
+
+@router.put("/follow/{post_id}", response_model=schemas.DisplayPost)
+def follow_post(
+    post_id,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    post = db.query(models.Post).filter(models.Post.id == post_id)
+    if not post.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Post doesnt exist"
+        )
+    if post.first().creator == request_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You cant follow your own post",
+        )
+    if request_user in post.first().followers:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You are already following this post",
+        )
+    post = post.first()
+    post.followers.append(request_user)
+    db.commit()
+    return post
+
+
+@router.put("/unfollow/{post_id}", response_model=schemas.DisplayPost)
+def unfollow_post(
+    post_id,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    post = db.query(models.Post).filter(models.Post.id == post_id)
+    print(post)
+    if not post.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Post doesnt exist"
+        )
+    if post.first().creator == request_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You cant unfollow your own post",
+        )
+    if not request_user in post.first().followers:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You are not following this post",
+        )
+    post = post.first()
+    post.followers.remove(request_user)
+    db.commit()
+    return post
