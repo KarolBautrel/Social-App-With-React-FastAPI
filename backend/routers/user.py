@@ -27,7 +27,10 @@ def create_user(request: schemas.CreateUser, db: Session = Depends(get_db)):
     )
     db.add(new_user)
     db.commit()
-    db.refresh(new_user)
+    new_user_inbox = models.Inbox(owner=new_user)
+    db.add(new_user_inbox)
+    db.commit()
+    db.refresh(new_user_inbox)
     return new_user
 
 
@@ -36,6 +39,7 @@ def get_request_user(
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
+    print(current_user)
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
@@ -56,3 +60,22 @@ def get_user(user_id, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist"
         )
     return user
+
+
+@router.delete("/")
+def delete_request_user_account(
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    if not request_user:
+        return Response(
+            {"Error": "You are not logged in"}, status_code=status.HTTP_404_NOT_FOUND
+        )
+    db.delete(request_user)
+    db.commit()
+    return Response(
+        {"Message": "Account deleted successfully"}, status_code=status.HTTP_200_OK
+    )

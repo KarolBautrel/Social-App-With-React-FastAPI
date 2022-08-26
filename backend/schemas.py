@@ -112,3 +112,29 @@ class TokenData(BaseModel):
 
 class CommentCreation(BaseModel):
     body: str
+
+
+class CreateMessage(BaseModel):
+    subject: str
+    body: str
+
+    class Config:
+        orm_mode = True
+
+
+class Message(BaseModel):
+    id: int
+    subject: str
+    creator: DisplayUser
+    is_readed: bool
+
+    class Config:
+        orm_mode = True
+
+
+class Inbox(BaseModel):
+    owner: RequestUser
+    messages: List[Message]
+
+    class Config:
+        orm_mode = True

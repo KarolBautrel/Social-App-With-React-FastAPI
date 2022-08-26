@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table
+from calendar import c
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table, DateTime
 from sqlalchemy.orm import relationship
 from database import Base
 from hashing import Hash
@@ -49,6 +50,10 @@ class User(Base):
     password = Column(Integer, unique=False, index=True)
     posts = relationship("Post", back_populates="creator")
     comments = relationship("Comment", back_populates="comment_creator")
+    messages_sent = relationship(
+        "DirectMessage", back_populates="creator", cascade="all, delete"
+    )
+    inbox = relationship("Inbox", back_populates="owner", cascade="all, delete")
 
     def verify_password(self, password):
         return Hash.verify_password(password, self.password)
@@ -63,3 +68,24 @@ class Comment(Base):
     room_id = Column(Integer, ForeignKey("posts.id"))
     comment_creator = relationship("User", back_populates="comments")
     commented_post = relationship("Post", back_populates="comments")
+
+
+class DirectMessage(Base):
+    __tablename__ = "direct_message"
+
+    id = Column(Integer, primary_key=True)
+    subject = Column(String)
+    body = Column(String)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    inbox = Column(Integer, ForeignKey("inbox.id"))
+    creator = relationship("User", back_populates="messages_sent")
+    received_inbox = relationship("Inbox", back_populates="messages")
+    is_readed = Column(Boolean)
+
+
+class Inbox(Base):
+    __tablename__ = "inbox"
+    id = Column(Integer, unique=True, primary_key=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="inbox")
+    messages = relationship("DirectMessage", back_populates="received_inbox")

@@ -32,7 +32,7 @@ async def get_jwt_token(
         expires_delta=access_token_expires,
     )
     print(access_token)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "Bearer"}
 
 
 @router.get("/logout")
