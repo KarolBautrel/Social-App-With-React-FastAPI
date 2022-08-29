@@ -19,6 +19,17 @@ followers_table = Table(
 )
 
 
+class Topic(Base):
+    __tablename__ = "topics"
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+    topic_name = Column(String, unique=True, index=True)
+    rooms = relationship("Post", back_populates="topics")
+
+
 class Post(Base):
     __tablename__ = "posts"
 
@@ -27,8 +38,10 @@ class Post(Base):
         primary_key=True,
         index=True,
     )
+
     title = Column(String, unique=True, index=True)
     body = Column(String, unique=False, index=True)
+    topic_id = Column(Integer, ForeignKey("topics.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
     creator = relationship("User", back_populates="posts")
     participants = relationship(
@@ -36,6 +49,7 @@ class Post(Base):
     )
     comments = relationship("Comment", back_populates="commented_post")
     followers = relationship("User", secondary=followers_table, backref="follower")
+    topics = relationship("Topic", back_populates="rooms")
 
     def __str__(self):
         return self.title
@@ -45,9 +59,9 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(Integer, unique=True, index=True)
-    email = Column(Integer, unique=True, index=True)
-    password = Column(Integer, unique=False, index=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    password = Column(String, unique=False, index=True)
     posts = relationship("Post", back_populates="creator")
     comments = relationship("Comment", back_populates="comment_creator")
     messages_sent = relationship(

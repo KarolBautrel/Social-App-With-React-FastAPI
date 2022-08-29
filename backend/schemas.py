@@ -3,6 +3,7 @@ from typing import List, Optional
 
 
 class CreateUpdatePost(BaseModel):
+    topic_name: str
     title: str
     body: str
 
@@ -60,7 +61,15 @@ class RequestUser(BaseModel):
         orm_mode = True
 
 
+class Topic(BaseModel):
+    topic_name: str
+
+    class Config:
+        orm_mode = True
+
+
 class DisplayPost(BaseModel):
+    topic: Topic
     title: str
     body: str
     id: int
@@ -74,6 +83,7 @@ class DisplayPost(BaseModel):
 
 
 class ListPost(BaseModel):
+    topic: str
     title: str
     id: int
 
@@ -135,6 +145,13 @@ class Message(BaseModel):
 class Inbox(BaseModel):
     owner: RequestUser
     messages: List[Message]
+
+    class Config:
+        orm_mode = True
+
+
+class CreateTopic(BaseModel):
+    topic_name: str
 
     class Config:
         orm_mode = True

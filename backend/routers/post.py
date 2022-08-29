@@ -4,9 +4,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 
-router = APIRouter(
-    dependencies=[Depends(auth_token.get_current_user)], prefix="/post", tags=["posts"]
-)
+router = APIRouter(prefix="/post", tags=["posts"])
 
 get_db = database.get_db
 
@@ -22,8 +20,19 @@ def create_post(
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
-    print(request_user)
-    new_post = models.Post(title=request.title, body=request.body, creator=request_user)
+    topic = (
+        db.query(models.Topic)
+        .filter(models.Topic.topic_name == request.topic_name)
+        .first()
+    )
+    if not topic:
+        HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="There is no topic with this id",
+        )
+    new_post = models.Post(
+        title=request.title, body=request.body, creator=request_user, topic=topic
+    )
     new_post.participants.append(request_user)
     new_post.followers.append(request_user)
     db.add(new_post)

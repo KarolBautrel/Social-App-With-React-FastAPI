@@ -9,7 +9,7 @@ get_db = database.get_db
 
 
 @router.post("/")
-async def get_jwt_token(
+def get_jwt_token(
     request: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
@@ -22,6 +22,7 @@ async def get_jwt_token(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="invalid password"
         )
+
     access_token_expires = timedelta(minutes=30)
     access_token = auth_token.create_access_token(
         data={
@@ -36,5 +37,5 @@ async def get_jwt_token(
 
 
 @router.get("/logout")
-async def index():
+def index():
     pass

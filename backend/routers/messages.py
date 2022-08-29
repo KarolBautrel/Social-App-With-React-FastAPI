@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response, HTTPException
 import models, schemas, database, auth_token, utils
 from sqlalchemy.orm import Session
-from typing import List
-from hashing import Hash
-from fastapi.responses import JSONResponse
 
 
 router = APIRouter(prefix="/messages", tags=["messages"])
