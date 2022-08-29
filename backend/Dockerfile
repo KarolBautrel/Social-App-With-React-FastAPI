@@ -1,13 +1,13 @@
 FROM python:3.9-slim
 
-WORKDIR /app
+WORKDIR /app/backend
 
-COPY ./requirements.txt /app
+COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY ./ /app
+COPY . .
 
 
 
-CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--reload"]
+#CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--reload"]

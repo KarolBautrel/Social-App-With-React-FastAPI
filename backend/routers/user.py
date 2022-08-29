@@ -58,7 +58,7 @@ def get_user(user_id, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist"
         )
-    print("siema siema")
+
     return user
 
 
