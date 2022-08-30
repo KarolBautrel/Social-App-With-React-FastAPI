@@ -18,7 +18,7 @@ get_db = database.get_db
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.Comment,
 )
-def create_message(
+def create_comment(
     post_id,
     request: schemas.CommentCreation,
     db: Session = Depends(get_db),
@@ -28,6 +28,10 @@ def create_message(
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
     commented_post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not commented_post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="There is no post like this"
+        )
     new_comment = models.Comment(
         body=request.body, comment_creator=request_user, commented_post=commented_post
     )

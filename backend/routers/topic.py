@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 
 
 router = APIRouter(
-    dependencies=[Depends(auth_token.get_current_user)],
     prefix="/topic",
     tags=["topics"],
 )
@@ -13,9 +12,8 @@ get_db = database.get_db
 
 
 @router.get("/")
-def get_inbox(
+def get_topics(
     db: Session = Depends(get_db),
-    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
     topics = db.query(models.Topic).all()
 
@@ -23,7 +21,11 @@ def get_inbox(
 
 
 @router.post("/")
-def create_topic(request: schemas.CreateTopic, db: Session = Depends(get_db)):
+def create_topic(
+    request: schemas.CreateTopic,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
 
     new_topic = models.Topic(topic_name=request.topic_name)
     db.add(new_topic)

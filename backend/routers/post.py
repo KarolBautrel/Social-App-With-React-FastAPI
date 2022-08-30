@@ -31,7 +31,7 @@ def create_post(
             detail="There is no topic with this id",
         )
     new_post = models.Post(
-        title=request.title, body=request.body, creator=request_user, topic=topic
+        title=request.title, body=request.body, creator=request_user, topics=topic
     )
     new_post.participants.append(request_user)
     new_post.followers.append(request_user)

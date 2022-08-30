@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, status, Response, HTTPException
+from fastapi import APIRouter, Depends, status, Response, HTTPException, BackgroundTasks
 import models, schemas, database, auth_token, utils
 from sqlalchemy.orm import Session
-
+import tasks
 
 router = APIRouter(prefix="/messages", tags=["messages"])
 
@@ -23,8 +23,9 @@ def get_inbox(
 
 
 @router.post("/{received_user_id}")
-def create_message(
+async def create_message(
     received_user_id,
+    background_tasks: BackgroundTasks,
     request: schemas.CreateMessage,
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
@@ -37,7 +38,11 @@ def create_message(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="There is no user like this"
         )
-
+    if receiver == request_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="You cant send message to yourself",
+        )
     try:
         print(request.subject, request.body, request_user, receiver.inbox)
         new_message = models.DirectMessage(
@@ -49,6 +54,14 @@ def create_message(
         )
     except:
         return "Nie udalo sie "
+    try:
+        background_tasks.add_task(
+            tasks.send_email,
+            receiver.email,
+            message_body=f"Youve got new Message from {request_user.username}",
+        )
+    except:
+        return "Nie wyslalem maila"
     db.add(new_message)
     db.commit()
     db.refresh(new_message)

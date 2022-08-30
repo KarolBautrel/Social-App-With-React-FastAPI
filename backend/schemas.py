@@ -69,7 +69,7 @@ class Topic(BaseModel):
 
 
 class DisplayPost(BaseModel):
-    topic: Topic
+    topics: Topic
     title: str
     body: str
     id: int
