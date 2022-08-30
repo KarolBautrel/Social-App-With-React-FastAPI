@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status, Response, HTTPException, Backgro
 import models, schemas, database, auth_token, utils
 from sqlalchemy.orm import Session
 import tasks
+from typing import List
 
 router = APIRouter(prefix="/messages", tags=["messages"])
 
@@ -13,6 +14,7 @@ def get_inbox(
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
+
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )
@@ -66,3 +68,29 @@ async def create_message(
     db.commit()
     db.refresh(new_message)
     return new_message
+
+
+@router.patch("/{message_id}")
+def mark_as_readed(
+    message_id,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    message = db.query(models.DirectMessage).filter(
+        models.DirectMessage.id == message_id
+    )
+    if not message.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="There is no message"
+        )
+
+    if message.first().received_inbox.owner == request_user:
+        message.first().is_readed = True
+        db.commit()
+        return message.first()
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="You are not reciver"
+    )

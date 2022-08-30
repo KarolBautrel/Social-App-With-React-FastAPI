@@ -32,5 +32,5 @@ async def send_email(email: str, message_body=""):
     )
     fm = FastMail(conf)
     await fm.send_message(message)
-    print("elo")
-    return "Elo"
+
+    return "Success"

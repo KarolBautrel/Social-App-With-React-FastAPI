@@ -55,7 +55,7 @@ class CreateUser(BaseModel):
 class RequestUser(BaseModel):
     username: str
     email: str
-    id: str
+    id: int
 
     class Config:
         orm_mode = True
@@ -83,7 +83,7 @@ class DisplayPost(BaseModel):
 
 
 class ListPost(BaseModel):
-    topic: str
+    topics: Topic
     title: str
     id: int
 
@@ -135,7 +135,7 @@ class CreateMessage(BaseModel):
 class Message(BaseModel):
     id: int
     subject: str
-    creator: DisplayUser
+    creator: UserInfo
     is_readed: bool
 
     class Config:
@@ -143,7 +143,7 @@ class Message(BaseModel):
 
 
 class Inbox(BaseModel):
-    owner: RequestUser
+    owner: UserInfo
     messages: List[Message]
 
     class Config:
