@@ -4,14 +4,11 @@ export const RecentCommentsCard = ({ recentCommentsQuery }) => {
   console.log(recentCommentsQuery);
   return (
     <div className="mr-5">
-      <p className=" ml-5 font-semibold text-slate-300 text-3xl">
+      <p className=" ml-5 font-semibold text-slate-600 text-3xl">
         Recent Comments
       </p>
       {recentCommentsQuery.map((comment) => (
-        <div
-          className="m-5 w-1/2 rounded-lg bg-zinc-300 shadow-lg shadow-slate-900 "
-          key={comment.id}
-        >
+        <div className="comment-card " key={comment.id}>
           <h3 className="font-semibold text-slate-600 text-xl">
             {comment.comment_creator.username.charAt(0).toUpperCase() +
               comment.comment_creator.username.slice(1)}{" "}

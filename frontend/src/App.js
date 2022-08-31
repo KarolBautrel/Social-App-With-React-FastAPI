@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="bg-slate-600 App">
+      <div className="bg-slate-100 App">
         <BrowserRouter>
           <Navbar />
           <Routes>
