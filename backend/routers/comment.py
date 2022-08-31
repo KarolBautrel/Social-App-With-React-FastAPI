@@ -5,7 +5,6 @@ from typing import List
 
 
 router = APIRouter(
-    dependencies=[Depends(auth_token.get_current_user)],
     prefix="/comment",
     tags=["comments "],
 )
@@ -44,7 +43,7 @@ def create_comment(
 
 
 @router.get("/", response_model=List[schemas.Comment])
-def list_all_messages(db: Session = Depends(get_db)):
+def list_all_comments(db: Session = Depends(get_db)):
     comments = db.query(models.Comment).all()
     for i in comments:
         print(i.comment_creator, i.commented_post)

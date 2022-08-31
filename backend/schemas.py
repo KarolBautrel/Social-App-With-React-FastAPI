@@ -30,6 +30,7 @@ class UserInfo(BaseModel):
 class PostInfo(BaseModel):
     title: str
     body: str
+    id: int
 
     class Config:
         orm_mode = True
