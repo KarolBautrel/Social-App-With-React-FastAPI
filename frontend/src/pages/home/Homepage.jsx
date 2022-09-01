@@ -3,13 +3,16 @@ import { RoomsList } from "./roomsList/RoomsList";
 import { RecentComments } from "./recentComments/RecentComments";
 export const Homepage = () => {
   return (
-    <div className="grid grid-rows-3 grid-flow-col gap-4">
-      <div className="row-span-3 col-span-2">
-        <RoomsList />
+    <div>
+      <div className="flex grid-cols-2 ">
+        <div className="col w-3/5 ">
+          <RoomsList />
+        </div>
+        <div className="col w-2/5">
+          <RecentComments />
+        </div>
       </div>
-      <div className="row-span-3">
-        <RecentComments />
-      </div>
+      <div className="grid grid-cols-2 ">Siemano</div>
     </div>
   );
 };

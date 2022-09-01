@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
+import "../../../index.css";
 
 export const RoomCards = ({ roomListQuery }) => {
-  console.log(roomListQuery);
   return (
     <div className="ml-10 w-full h-full sm:h-full">
       <h3 className=" ml-5 font-semibold text-slate-600 text-3xl"> Rooms </h3>
@@ -13,12 +13,13 @@ export const RoomCards = ({ roomListQuery }) => {
           <h3 className="ml-[30%] font-semibold text-slate-600 text-xl ">
             {room.title}
           </h3>
-          <h3 className="ml-[5%] font-medium text-slate-900">
+          <h3
+            className={`ml-[5%] ${room.topics.topic_name.toLowerCase()}-topic`}
+          >
             {room.topics.topic_name}
           </h3>
           <div className="flex ">
-            <h3 className="ml-[5%] font-medium text-slate-900">{room.body}</h3>
-            <button className="ml-[25%] ">
+            <button className="ml-[55%] ">
               <Link to={`room/${room.id}`}> Get to the Room </Link>
             </button>
           </div>

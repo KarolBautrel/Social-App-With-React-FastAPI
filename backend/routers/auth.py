@@ -13,6 +13,7 @@ def get_jwt_token(
     request: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
+    print(request)
     user = db.query(models.User).filter(models.User.email == request.username).first()
     if not user:
         raise HTTPException(
