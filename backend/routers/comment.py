@@ -35,7 +35,6 @@ def create_comment(
         body=request.body, comment_creator=request_user, commented_post=commented_post
     )
     commented_post.participants.append(request_user)
-    print(new_comment)
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
@@ -45,8 +44,6 @@ def create_comment(
 @router.get("/", response_model=List[schemas.Comment])
 def list_all_comments(db: Session = Depends(get_db)):
     comments = db.query(models.Comment).all()
-    for i in comments:
-        print(i.comment_creator, i.commented_post)
 
     return comments
 
@@ -58,7 +55,6 @@ def update_comment(
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
-    print(current_user)
     comment = db.query(models.Comment).filter(models.Comment.id == comment_id)
     current_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()

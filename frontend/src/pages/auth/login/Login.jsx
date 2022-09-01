@@ -30,15 +30,11 @@ export const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = getTokenJWT(login);
-    console.log(response);
-    if (response === "ok") {
-      redirect("/");
-    } else {
-      alert("not working");
-    }
+    const data = await getTokenJWT(login);
+    window.localStorage.setItem("AUTH_CREDENTIALS", JSON.stringify(data));
+    redirect("/");
   };
 
   return (

@@ -13,7 +13,6 @@ def get_jwt_token(
     request: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
-    print(request)
     user = db.query(models.User).filter(models.User.email == request.username).first()
     if not user:
         raise HTTPException(
@@ -34,7 +33,11 @@ def get_jwt_token(
         expires_delta=access_token_expires,
     )
     print(access_token)
-    return {"access_token": access_token, "token_type": "Bearer"}
+    return {
+        "access_token": access_token["token"],
+        "token_type": "Bearer",
+        "user": access_token["data"],
+    }
 
 
 @router.get("/logout")

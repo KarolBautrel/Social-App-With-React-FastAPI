@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { Logout } from "../pages/auth/logout/Logout";
 export const Navbar = () => {
+  const { username } = useSelector((state) => state.auth);
+  console.log(username);
   return (
     <nav className="navbar-background ">
       <div className="flex">
@@ -9,11 +12,24 @@ export const Navbar = () => {
             Home
           </Link>
         </div>
-        <div className="m-3 ml-[85%] rounded-md bg-gradient-to-r from-pink-500 hover:to-yellow-500">
-          <Link className="p-3 text-2xl" to="/login">
-            Login
-          </Link>
-        </div>
+        {!username ? (
+          <div className="m-3 ">
+            <Link className="btn-pink-yellow" to="/login">
+              Login
+            </Link>
+          </div>
+        ) : (
+          <div className="flex">
+            <div className="m-5">
+              <Link className="btn-pink-yellow" to="/me">
+                Profile
+              </Link>
+            </div>
+            <div className="m-3 ">
+              <Logout />
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

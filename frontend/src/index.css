@@ -10,6 +10,10 @@
     .btn-blue {
       @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
     }
+
+    .btn-pink-yellow{
+         @apply  bg-gradient-to-r from-pink-500 hover:to-yellow-500 text-zinc-200 font-bold py-2 px-4 rounded;
+    }
     .health-card{
         @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-lime-400  hover:shadow-lime-700
     }

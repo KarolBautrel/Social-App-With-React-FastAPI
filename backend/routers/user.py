@@ -40,7 +40,6 @@ def get_request_user(
     db: Session = Depends(get_db),
     current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
 ):
-    print(current_user)
     request_user = (
         db.query(models.User).filter(models.User.email == current_user.email).first()
     )

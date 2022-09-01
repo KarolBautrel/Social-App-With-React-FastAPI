@@ -46,7 +46,6 @@ async def create_message(
             detail="You cant send message to yourself",
         )
     try:
-        print(request.subject, request.body, request_user, receiver.inbox)
         new_message = models.DirectMessage(
             subject=request.subject,
             body=request.body,

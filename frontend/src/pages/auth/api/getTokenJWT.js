@@ -1,15 +1,15 @@
-export const getTokenJWT = async ({ email, password }) => {
-  console.log(email, password);
+export const getTokenJWT = async (login) => {
+  const loginFormData = new FormData();
+  loginFormData.append("username", login.email);
+  loginFormData.append("password", login.password);
   const resp = await fetch("/login", {
     method: "POST",
-    headers: { "Content-type": "application/x-www-form-urlencoded" },
-    body: JSON.stringify({ username: email, password: password }),
+
+    body: loginFormData,
   });
-  if (resp.ok) {
-    const data = await resp.json();
-    window.localStorage.setItem("AUTH_CREDENTIALS", JSON.stringify(data));
-    return "ok";
-  } else {
-    throw new Error("Invalid credentials");
+  if (!resp.ok) {
+    throw new Error("somethind went wrong with fetch");
   }
+  const data = await resp.json();
+  return data;
 };

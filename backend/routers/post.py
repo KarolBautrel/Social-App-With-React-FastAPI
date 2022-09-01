@@ -44,9 +44,7 @@ def create_post(
 @router.get("/", response_model=List[schemas.DisplayPost])
 def list_all_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
-    for i in posts:
-        for participant in i.participants:
-            print(participant.id)
+
     return posts
 
 
@@ -58,8 +56,6 @@ def retrieve_post(post_id, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="There is no post like this"
         )
-    for i in post.comments:
-        print(i.body)
     return post
 
 
@@ -83,7 +79,6 @@ def put_post(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Only cretor of blog can update it",
         )
-    print(request)
     post.update(request.dict())
     db.commit()
     return post.first()

@@ -1,7 +1,12 @@
-import React from "react";
+import { useState } from "react";
 import { RoomsList } from "./roomsList/RoomsList";
 import { RecentComments } from "./recentComments/RecentComments";
+import { GetLoggedUser } from "./reduxService/GetLoggedUser";
 export const Homepage = () => {
+  useState(() => {
+    GetLoggedUser();
+  }, []);
+
   return (
     <div>
       <div className="flex grid-cols-2 ">
