@@ -13,11 +13,18 @@ export const Navbar = () => {
           </Link>
         </div>
         {!username ? (
-          <div className="m-3 ">
-            <Link className="btn-pink-yellow" to="/login">
-              Login
-            </Link>
-          </div>
+          <>
+            <div className="m-3 ">
+              <Link className="btn-pink-yellow" to="/login">
+                Login
+              </Link>
+            </div>
+            <div className="m-3 ">
+              <Link className="btn-pink-yellow" to="/register">
+                Signup
+              </Link>
+            </div>{" "}
+          </>
         ) : (
           <div className="flex">
             <div className="m-5">

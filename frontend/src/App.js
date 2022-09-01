@@ -4,6 +4,8 @@ import { Homepage } from "./pages/home/Homepage";
 import { Room } from "./pages/room/Room";
 import { Navbar } from "./components/Navbar";
 import { Login } from "./pages/auth/login/Login";
+import { Register } from "./pages/auth/register/Register";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionHolder } from "./utilities/SessionHolder";
 
@@ -19,6 +21,7 @@ function App() {
               <Route exact path="/" element={<Homepage />} />
               <Route path="/room/:id" element={<Room />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </BrowserRouter>
         </div>
