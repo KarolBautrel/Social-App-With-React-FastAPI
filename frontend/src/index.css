@@ -3,34 +3,34 @@
 @tailwind utilities;
 
 
-
-
-
     @layer components {
     .btn-blue {
-      @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+      @apply bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded;
     }
 
-    .btn-pink-yellow{
-         @apply  bg-gradient-to-r from-pink-500 hover:to-yellow-500 text-zinc-200 font-bold py-2 px-4 rounded;
+    .card{
+        @apply ml-[25%] mt-[10%] w-1/2 rounded-md bg-gradient-to-r from-cyan-300 to-blue-300 
+    }
+    .btn-navbar{
+         @apply  bg-gradient-to-r from-blue-500 hover:to-cyan-500 text-zinc-200 font-bold py-2 px-4 rounded;
     }
     .health-card{
-        @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-lime-400  hover:shadow-lime-700
+        @apply m-5 w-1/2 rounded-lg bg-gradient-to-r from-cyan-300 to-blue-300  shadow-lg shadow-lime-400  hover:shadow-lime-700
     }
     .science-card{
-        @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-indigo-400 hover:shadow-indigo-700
+        @apply m-5 w-1/2 rounded-lg bg-gradient-to-r from-cyan-300 to-blue-300  shadow-lg shadow-indigo-400 hover:shadow-indigo-700
 
     }
     .fitness-card{
-        @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-rose-400 hover:shadow-rose-700
+        @apply m-5 w-1/2 rounded-lg bg-gradient-to-r from-cyan-300 to-blue-300 shadow-lg shadow-rose-400 hover:shadow-rose-700
 
     }
     .cooking-card{
-        @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-orange-400 hover:shadow-orange-700
+        @apply m-5 w-1/2 rounded-lg bg-gradient-to-r from-cyan-300 to-blue-300  shadow-lg shadow-orange-400 hover:shadow-orange-700
 
     }
     .comment-card{
-        @apply m-5 w-1/2 rounded-lg bg-zinc-50  shadow-lg shadow-slate-900
+        @apply m-5 w-1/2 rounded-lg bg-gradient-to-r from-cyan-300 to-blue-300 shadow-lg shadow-slate-900
         
     }
     .health-topic{
@@ -53,7 +53,7 @@
         
     }
     .navbar-background{
-        @apply bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-blue-400 hover:border-indigo-300 
+        @apply bg-gradient-to-r from-cyan-300 to-blue-300 shadow-lg shadow-blue-400 hover:border-indigo-300 
     }
     .chat-container{
         @apply h-96 m-1 rounded-lg bg-zinc-100 border-y-2 border-cyan-400 

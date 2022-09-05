@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Logout } from "../pages/auth/logout/Logout";
+import { Searchbar } from "./Searchbar";
 export const Navbar = () => {
   const { username } = useSelector((state) => state.auth);
   console.log(username);
@@ -12,23 +13,26 @@ export const Navbar = () => {
             Home
           </Link>
         </div>
+        <div className="m-3">
+          <Searchbar />
+        </div>
         {!username ? (
-          <>
+          <div className="ml-[60%] flex">
             <div className="m-3 ">
-              <Link className="btn-pink-yellow" to="/login">
+              <Link className="btn-navbar" to="/login">
                 Login
               </Link>
             </div>
             <div className="m-3 ">
-              <Link className="btn-pink-yellow" to="/register">
+              <Link className="btn-navbar" to="/register">
                 Signup
               </Link>
             </div>{" "}
-          </>
+          </div>
         ) : (
-          <div className="flex">
+          <div className="ml-[60%] flex">
             <div className="m-5">
-              <Link className="btn-pink-yellow" to="/me">
+              <Link className="btn-navbar" to="/me">
                 Profile
               </Link>
             </div>

@@ -21,7 +21,7 @@ export const Logout = () => {
 
   return (
     <div>
-      <button className="btn-pink-yellow" onClick={handleClick}>
+      <button className="btn-navbar" onClick={handleClick}>
         Logout
       </button>
     </div>

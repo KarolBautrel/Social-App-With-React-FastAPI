@@ -2,11 +2,30 @@ from fastapi import APIRouter, Depends, status, Response, HTTPException
 import models, schemas, database, auth_token
 from sqlalchemy.orm import Session
 from typing import List
-
+from typing import Optional
 
 router = APIRouter(prefix="/post", tags=["posts"])
 
 get_db = database.get_db
+
+
+@router.get("/", response_model=List[schemas.DisplayPost])
+def get_posts(query: Optional[str] = None, db: Session = Depends(get_db)):
+    if query:
+        topic = db.query(models.Topic).filter(models.Topic.topic_name == query).first()
+        if not topic:
+            post = db.query(models.Post).all()
+            return post
+
+        post = db.query(models.Post).filter(models.Post.topics == topic).all()
+        print(post)
+        if not post:
+            post = db.query(models.Post).all()
+            return post
+        return post
+    posts = db.query(models.Post).all()
+
+    return posts
 
 
 @router.post(
@@ -39,13 +58,6 @@ def create_post(
     db.commit()
     db.refresh(new_post)
     return new_post
-
-
-@router.get("/", response_model=List[schemas.DisplayPost])
-def list_all_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
-
-    return posts
 
 
 @router.get("/{post_id}", response_model=schemas.DisplayPost)
