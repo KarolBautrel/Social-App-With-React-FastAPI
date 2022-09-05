@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Logout } from "../pages/auth/logout/Logout";
 import { Searchbar } from "./Searchbar";
+import { FaEnvelope } from "react-icons/fa";
 export const Navbar = () => {
   const { username } = useSelector((state) => state.auth);
   console.log(username);
@@ -38,6 +39,11 @@ export const Navbar = () => {
             </div>
             <div className="m-3 ">
               <Logout />
+            </div>
+            <div className="m-3 ">
+              <Link className="btn-navbar" to="/inbox">
+                <FaEnvelope />
+              </Link>
             </div>
           </div>
         )}

@@ -6,7 +6,9 @@ import { Navbar } from "./components/Navbar";
 import { Login } from "./pages/auth/login/Login";
 import { Register } from "./pages/auth/register/Register";
 import { LoggedUserDashboard } from "./pages/user/loggedUserDashboard/LoggedUserDashboard";
+import { DifferentUserDashboard } from "./pages/user/differentUserDashboard/DifferentUserDashboard";
 import { SessionHolder } from "./utilities/SessionHolder";
+import { Inbox } from "./pages/user/loggedUserDashboard/inbox/Inbox";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/me" element={<LoggedUserDashboard />} />
+            <Route path="/inbox" element={<Inbox />} />
+            <Route path="/user/:id" element={<DifferentUserDashboard />} />
           </Routes>
         </BrowserRouter>
       </div>

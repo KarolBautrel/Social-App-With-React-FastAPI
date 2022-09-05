@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export const RoomComments = ({ roomQuery }) => {
   console.log(roomQuery);
   return (
@@ -7,9 +7,11 @@ export const RoomComments = ({ roomQuery }) => {
       {roomQuery.comments.map((comment) => (
         <div key={comment.id}>
           <ul>
-            <h1 className="font-bold font-sans">
-              {comment.comment_creator.username}:
-            </h1>
+            <Link to={`user/${comment.comment_creator.id}`} replace>
+              <h1 className="font-bold font-sans">
+                {comment.comment_creator.username}:
+              </h1>
+            </Link>
             <li>{comment.body}</li>
           </ul>
         </div>

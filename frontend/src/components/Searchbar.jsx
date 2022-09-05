@@ -29,12 +29,7 @@ export const Searchbar = () => {
           </option>
         ))}
       </select>
-      <button
-        className="btn btn-outline-success"
-        onClick={() => {
-          useSearchingPostsQuery(queryPhrase);
-        }}
-      >
+      <button className="btn btn-outline-success" onClick={() => {}}>
         Search
       </button>
     </div>

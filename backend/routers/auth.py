@@ -22,13 +22,20 @@ def get_jwt_token(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="invalid password"
         )
-
     access_token_expires = timedelta(minutes=30)
     access_token = auth_token.create_access_token(
         data={
             "user_email": user.email,
             "user_id": user.id,
             "user_username": user.username,
+            "inbox": [
+                {
+                    "message_body": message.body,
+                    "message_status": message.is_readed,
+                    "message_creator": message.creator.username,
+                }
+                for message in user.inbox[0].messages
+            ],
         },
         expires_delta=access_token_expires,
     )
