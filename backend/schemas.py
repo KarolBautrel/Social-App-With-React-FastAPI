@@ -156,3 +156,13 @@ class CreateTopic(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ChangeEmail(BaseModel):
+    new_email: str
+
+
+class ChangePassword(BaseModel):
+    old_password: str
+    new_password: str
+    confirm_password: str

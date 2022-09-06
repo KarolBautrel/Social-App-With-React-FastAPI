@@ -79,3 +79,50 @@ def delete_request_user_account(
     return Response(
         {"Message": "Account deleted successfully"}, status_code=status.HTTP_200_OK
     )
+
+
+@router.patch("/change_mail")
+def change_email(
+    request: schemas.ChangeEmail,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    print(request_user)
+    if not "@" in request.new_email:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Please write correct email"
+        )
+    request_user.email = request.new_email
+    db.commit()
+    return Response(status_code=status.HTTP_200_OK)
+
+
+@router.patch("/change_password")
+def change_password(
+    request: schemas.ChangePassword,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    print(request.new_password)
+    print(request.old_password)
+    if not Hash.verify_password(request.old_password, request_user.password):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Please old password is wrong"
+        )
+    print("dziala")
+    if not request.new_password == request.confirm_password:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Passwords doesnt match"
+        )
+
+    hashed_password = Hash.bcrypt(request.new_password)
+    request_user.password = hashed_password
+    db.commit()
+    return Response(status_code=status.HTTP_200_OK)
