@@ -20,7 +20,7 @@ export const DifferentUserDashboard = () => {
     <div className="card">
       {differentUserCredentials ? (
         <div>
-          <DifferentUserCard differenUser={differentUserCredentials} />
+          <DifferentUserCard differentUser={differentUserCredentials} />
         </div>
       ) : (
         <div> loading </div>

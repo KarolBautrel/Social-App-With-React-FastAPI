@@ -143,6 +143,17 @@ class Message(BaseModel):
         orm_mode = True
 
 
+class FullMessage(BaseModel):
+    id: int
+    subject: str
+    creator: UserInfo
+    is_readed: bool
+    body: str
+
+    class Config:
+        orm_mode = True
+
+
 class Inbox(BaseModel):
     owner: UserInfo
     messages: List[Message]

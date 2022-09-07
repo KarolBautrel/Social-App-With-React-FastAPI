@@ -9,7 +9,7 @@ import { LoggedUserDashboard } from "./pages/user/loggedUserDashboard/LoggedUser
 import { DifferentUserDashboard } from "./pages/user/differentUserDashboard/DifferentUserDashboard";
 import { SessionHolder } from "./utilities/SessionHolder";
 import { Inbox } from "./pages/user/loggedUserDashboard/inbox/Inbox";
-
+import { MessageDashboard } from "./pages/user/messagesService/MessageDashboard";
 function App() {
   return (
     <SessionHolder>
@@ -24,6 +24,7 @@ function App() {
             <Route path="/me" element={<LoggedUserDashboard />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/user/:id" element={<DifferentUserDashboard />} />
+            <Route path="/message/:id" element={<MessageDashboard />} />
           </Routes>
         </BrowserRouter>
       </div>

@@ -93,3 +93,28 @@ def mark_as_readed(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="You are not reciver"
     )
+
+
+@router.get("/{message_id}", response_model=schemas.FullMessage)
+def get_message(
+    message_id,
+    db: Session = Depends(get_db),
+    current_user: schemas.RequestUser = Depends(auth_token.get_current_user),
+):
+    request_user = (
+        db.query(models.User).filter(models.User.email == current_user.email).first()
+    )
+    message = (
+        db.query(models.DirectMessage)
+        .filter(models.DirectMessage.id == message_id)
+        .first()
+    )
+    if not message:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="There is no message"
+        )
+    if not message.received_inbox.owner == request_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This is not your message"
+        )
+    return message

@@ -1,23 +1,21 @@
 import { useState, useEffect } from "react";
 import { getLocalStorageInboxData } from "../../utils/getLocalStorageInboxData";
+import { useGetInboxQuery } from "../../api/useGetInboxQuery";
 import { InboxCard } from "./InboxCard";
 export const Inbox = () => {
-  const [inboxData, setInboxData] = useState("");
-
-  useEffect(() => {
-    const data = getLocalStorageInboxData();
-    setInboxData(data);
-    console.log(inboxData);
-  }, []);
+  const inboxQuery = useGetInboxQuery();
+  console.log(inboxQuery.data);
+  if (inboxQuery.status === "error") {
+    return <div>Error</div>;
+  }
+  if (inboxQuery.status === "loading") {
+    <div>Loading...</div>;
+  }
   return (
     <>
-      {inboxData ? (
-        <div className="card">
-          <InboxCard messages={inboxData} />
-        </div>
-      ) : (
-        <div>Loading..</div>
-      )}
+      <div className="card">
+        <InboxCard messages={inboxQuery.data} />
+      </div>
     </>
   );
 };
